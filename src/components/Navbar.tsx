@@ -25,12 +25,11 @@ const Navbar = () => {
         </div>
         <div className="flex-none lg:gap-5 md:lg:gap-5">
           <MdOutlineMyLocation className="cursor-pointer tooltip tooltip-open tooltip-bottom" data-tip="hello"/>
-          <IoLocation onClick={() => test1()} className="cursor-pointer "/>
+          <IoLocation className="cursor-pointer "/>
           <h1>{searchLocation}</h1>
           <div className="form-control">
             <form onSubmit={(event) => handleSubmitLocation(event)}>
               <input
-                onClick={() => test()}
                 type="text"
                 placeholder="Search"
                 className="input input-bordered w-24 md:w-auto"
