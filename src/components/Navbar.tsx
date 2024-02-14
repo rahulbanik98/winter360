@@ -3,9 +3,6 @@
 import React, { useState } from "react";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { IoLocation } from "react-icons/io5";
-import { FaSearchLocation } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { addData } from "@/redux/Slice";
 
 const Navbar = () => {
   const [searchLocation, setSearchLocation] = useState<
@@ -18,22 +15,6 @@ const Navbar = () => {
 
   const handleSubmitLocation = (event: string | any) => {
     event.preventDefault();
-  };
-
-  const selectordata = useSelector((state) => state);
-
-  const test = () => {
-    console.log("selectordata", selectordata);
-  };
-  const dispatch = useDispatch();
-  const test1 = () => {
-    const arr = [
-      { name: "redux test Name" },
-      { desc: "redux test Desc" },
-      { type: true },
-    ];
-
-    dispatch(addData(arr));
   };
 
   return (
