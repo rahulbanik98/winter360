@@ -35,3 +35,11 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 # winter360
+
+
+{/* https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=c7c2019001c1b2b74632c8200ad139e5&cnt=56 */}
+
+
+https://www.youtube.com/watch?v=KkC_wYM_Co4
+
+39# winter360
