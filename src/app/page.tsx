@@ -4,47 +4,28 @@ import { Dynamicbodycontainer, Dynamicnavbar } from '@/components';
 import { getLiveData } from '@/utils/getData';
 import { convertToCelcius } from '@/utils/Utilstempfunctions';
 
-interface WeatherData {
-  data: {
-    list: {
-      dt_txt: string;
-      main: {
-        feels_like: string;
-        temp: string;
-        temp_max: string;
-        temp_min: string;
-      };
-    }[];
-  };
-}
-
 const Home: FC = () => {
-  const [weatherDataState, setWeatherDataState] = useState<WeatherData>();
+  const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
         const liveWeatherData = await getLiveData();
         setWeatherDataState(liveWeatherData);
       } catch (error) {
         console.log('API not working', error);
       }
-    })();
+    };
+
+    fetchData();
+
   }, []);
 
-  console.log('weatherDataState', weatherDataState);
-
   const todayData: string | undefined = weatherDataState?.data?.list[0]?.dt_txt;
-
   const feelLikeTemp = weatherDataState?.data?.list[0]?.main?.feels_like;
-
   const temprature = weatherDataState?.data?.list[0]?.main?.temp;
-
   const maxTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_max;
-
   const minTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_min;
-
-  // console.log('temprature', temprature);
 
   return (
     <>
@@ -60,32 +41,30 @@ const Home: FC = () => {
             <Dynamicbodycontainer className="gap-10 px-6 items-center">
               <div className="flex flex-col px-4">
                 <span className="text-5xl">
-                  {parseInt(convertToCelcius(temprature))}°
+                  {parseInt(convertToCelcius(temprature || '0'))}°
                 </span>
                 <p className="text-xs space-x-1 whitespace-nowrap">
                   <span>Feels like</span>
-                  <span>{parseInt(convertToCelcius(feelLikeTemp))}°</span>
+                  <span>{parseInt(convertToCelcius(feelLikeTemp || '0'))}°</span>
                 </p>
                 <div className="flex gap-4">
                   <p className="text-xs space-x-2">
-                    {parseInt(convertToCelcius(maxTodayTemp))}°↑
+                    {parseInt(convertToCelcius(maxTodayTemp || '0'))}°↑
                   </p>
                   <p className="text-xs space-x-2">
-                    {parseInt(convertToCelcius(minTodayTemp))}°↓
+                    {parseInt(convertToCelcius(minTodayTemp || '0'))}°↓
                   </p>
                 </div>
               </div>
               <div className="flex gap-10 sm:gap-16 overflow-x-auto w-full justify-between pr-3">
-                {weatherDataState?.data?.list?.map(
-                  (value: string | object, key: number) => (
-                    <div
-                      key={key}
-                      className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
-                    >
-                      <p>{value.dt_txt}</p>
-                    </div>
-                  )
-                )}
+                {weatherDataState?.data?.list?.map((value: any, key: any) => (
+                  <div
+                    key={key}
+                    className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
+                  >
+                    <p>{value.dt_txt}</p>
+                  </div>
+                ))}
               </div>
             </Dynamicbodycontainer>
           </section>
