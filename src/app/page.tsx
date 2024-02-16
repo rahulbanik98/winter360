@@ -1,83 +1,38 @@
-"use client";
-
-import { Dynamicbodycontainer, Dynamicnavbar } from "@/components";
-import { getLiveData } from "@/utils/getData";
-import { useEffect, useState } from "react";
-// import { getLiveData } from "@/utils/getLiveData";
-import { format, fromUnixTime, parseISO } from "date-fns";
-import { convertToCelcius } from "@/utils/Utilstempfunctions";
-
-interface WeatherDetail {
-  dt: number;
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    sea_level: number;
-    grnd_level: number;
-    humidity: number;
-    temp_kf: number;
-  };
-  weather: {
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }[];
-  clouds: {
-    all: number;
-  };
-  wind: {
-    speed: number;
-    deg: number;
-    gust: number;
-  };
-  visibility: number;
-  pop: number;
-  sys: {
-    pod: string;
-  };
-  dt_txt: string;
-}
+'use client'
+import React, { FC, useEffect, useState } from 'react';
+import { Dynamicbodycontainer, Dynamicnavbar } from '@/components';
+import { getLiveData } from '@/utils/getData';
+import { convertToCelcius } from '@/utils/Utilstempfunctions';
 
 interface WeatherData {
-  cod: string;
-  message: number;
-  cnt: number;
-  list: WeatherDetail[];
-  city: {
-    id: number;
-    name: string;
-    coord: {
-      lat: number;
-      lon: number;
-    };
-    country: string;
-    population: number;
-    timezone: number;
-    sunrise: number;
-    sunset: number;
+  data: {
+    list: {
+      dt_txt: string;
+      main: {
+        feels_like: string;
+        temp: string;
+        temp_max: string;
+        temp_min: string;
+      };
+    }[];
   };
 }
 
-const Home = () => {
-  const [weatherDataState, setWeatherDataState] = useState<object>();
+const Home: FC = () => {
+  const [weatherDataState, setWeatherDataState] = useState<WeatherData>();
 
   useEffect(() => {
     (async () => {
       try {
         const liveWeatherData = await getLiveData();
         setWeatherDataState(liveWeatherData);
-        // console.log("liveWeatherData", liveWeatherData);
       } catch (error) {
-        console.log("API not working", error);
+        console.log('API not working', error);
       }
     })();
   }, []);
 
-  console.log("weatherDataState", weatherDataState);
+  console.log('weatherDataState', weatherDataState);
 
   const todayData: string | undefined = weatherDataState?.data?.list[0]?.dt_txt;
 
@@ -89,17 +44,7 @@ const Home = () => {
 
   const minTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_min;
 
-  console.log("temprature", temprature);
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex items-center min-h-screen justify-center">
-  //       <p className="animate-bounce">Loading...</p>
-  //     </div>
-  //   );
-  // }
-
-  // const firstData = data?.
+  // console.log('temprature', temprature);
 
   return (
     <>
