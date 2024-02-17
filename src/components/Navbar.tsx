@@ -7,7 +7,7 @@ import { IoLocation } from "react-icons/io5";
 const Navbar = () => {
   const [searchLocation, setSearchLocation] = useState<
     string | number | readonly string[] | undefined
-  >("");
+  >("Kolkata");
 
   const searchLocationFunction = (event: string | any) => {
     setSearchLocation(event.target.value);
@@ -31,7 +31,7 @@ const Navbar = () => {
             <form onSubmit={(event) => handleSubmitLocation(event)}>
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Enter location"
                 className="input input-bordered w-24 md:w-auto"
                 onChange={(event) => searchLocationFunction(event)}
                 value={searchLocation}

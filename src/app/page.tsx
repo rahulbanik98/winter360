@@ -2,7 +2,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Dynamicbodycontainer, Dynamicnavbar, Dynamicweathericon } from '@/components';
 import { getLiveData } from '@/utils/getData';
-import { convertToCelcius } from '@/utils/Utilstempfunctions';
+import { convertToCelcius, getDayOrNightIcon } from '@/utils/Utilstempfunctions';
 
 const Home: FC = () => {
   const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
@@ -28,6 +28,7 @@ const Home: FC = () => {
   const minTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_min;
   // console.log(weatherDataState?.data?.list[0]?.weather[0]?.icon);
   const loveIcons = weatherDataState?.data?.list[0]?.weather[0]?.icon
+  console.log("weatherDataState", weatherDataState);
 
   return (
     <>
@@ -65,7 +66,8 @@ const Home: FC = () => {
                     className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
                   >
                     <p className='whitespace-nowrap'>{value.dt_txt}</p>
-                    <Dynamicweathericon iconName={weatherDataState?.data?.list[0]?.weather[0]?.icon}/>
+                    <Dynamicweathericon iconName={getDayOrNightIcon(weatherDataState?.data?.list[0]?.weather[0]?.icon, weatherDataState?.data?.list[0]?.dt_txt
+                    )} />
                     <p>{parseInt(convertToCelcius(temprature || '0'))}°</p>
                   </div>
                 ))}
