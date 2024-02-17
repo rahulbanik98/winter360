@@ -72,7 +72,23 @@ const Home: FC = () => {
                   </div>
                 ))}
               </div>
+
             </Dynamicbodycontainer>
+
+            <div className='flex gap-4'>
+              <Dynamicbodycontainer className='w-fit justify-center flex-col px-4 items-center'>
+                <p>{
+                  weatherDataState?.data?.list[0]?.weather[0]?.description}</p>
+                <Dynamicweathericon iconName={getDayOrNightIcon(weatherDataState?.data?.list[0]?.weather[0]?.icon ?? "", weatherDataState?.data?.list[0]?.dt_txt ?? ""
+                )} />
+              </Dynamicbodycontainer>
+            </div>
+          </section>
+
+
+
+          <section className='flex w-full flex-col gap-4'>
+            <p className='text-2xl'>Forcust (7 Days)</p>
           </section>
         </main>
       </div>
