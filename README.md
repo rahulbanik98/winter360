@@ -42,6 +42,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 https://www.youtube.com/watch?v=KkC_wYM_Co4
 
-1:07:00# winter360
+1:15:00# winter360
 
 next => https://www.youtube.com/watch?v=nGoSP3MBV2E
