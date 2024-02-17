@@ -10,7 +10,7 @@ const Home: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const liveWeatherData = await getLiveData();
+        const liveWeatherData = await getLiveData("kolkata");
         setWeatherDataState(liveWeatherData);
       } catch (error) {
         console.log('API not working', error);
