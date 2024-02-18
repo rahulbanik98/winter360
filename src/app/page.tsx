@@ -5,6 +5,20 @@ import { getLiveData } from '@/utils/getData';
 import { convertToAMPM, convertToCelcius, convertWindSpeed, getDayOrNightIcon, metersToKilometers } from '@/utils/Utilstempfunctions';
 import { fromUnixTime } from 'date-fns';
 
+
+interface WeatherEntry {
+    dt: number;
+    // Add other properties as needed
+}
+
+interface WeatherDataState {
+    data: {
+        list: WeatherEntry[];
+        // Add other properties as needed
+    };
+    // Add other properties as needed
+}
+
 const Home: FC = () => {
   const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
 
@@ -35,20 +49,20 @@ const Home: FC = () => {
   const uniqueDates = [
     ...new Set(
       weatherDataState?.data?.list.map(
-        (entry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+        (entry: any) => new Date(entry.dt * 1000).toISOString().split("T")[0]
       )
     )
   ];
   console.log('uniqueDates', uniqueDates);
 
   // Filtering data to get the first entry after 6 AM for each unique date
-  const firstDataForEachDate = uniqueDates.map((date) => {
-    return weatherDataState?.data?.list.find((entry) => {
-      const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
-      const entryTime = new Date(entry.dt * 1000).getHours();
-      return entryDate === date && entryTime >= 6;
+  const firstDataForEachDate: (WeatherEntry | undefined)[] = uniqueDates.map((date: string | any) => {
+    return weatherDataState?.data?.list.find((entry: WeatherEntry) => {
+        const entryDate: string = new Date(entry.dt * 1000).toISOString().split("T")[0];
+        const entryTime: number = new Date(entry.dt * 1000).getHours();
+        return entryDate === date && entryTime >= 6;
     });
-  });
+});
   console.log("firstDataForEachDate", firstDataForEachDate);
 
   return (
@@ -134,8 +148,6 @@ const Home: FC = () => {
                 />
               ))
             }
-
-
           </section>
         </main>
       </div>
