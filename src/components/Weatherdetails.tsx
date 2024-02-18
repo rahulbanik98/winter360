@@ -7,7 +7,7 @@ import { MdAir } from "react-icons/md";
 import { ImMeter } from "react-icons/im";
 
 export interface WeatherDetailProps {
-    visability: string;
+    visability: string | number | any;
     humidity: string;
     windSpeed: string;
     airPressure: string;
