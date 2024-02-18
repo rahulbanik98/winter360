@@ -9,6 +9,10 @@ const Navbar = () => {
     string | number | readonly string[] | undefined
   >("Kolkata");
 
+  const [error, setError] = useState()
+  const [suggestions, setSuggestions] = useState<string[]>()
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
   const searchLocationFunction = (event: string | any) => {
     setSearchLocation(event.target.value);
   };
@@ -24,8 +28,8 @@ const Navbar = () => {
           <p className="btn btn-ghost text-xl">Winter360°</p>
         </div>
         <div className="flex-none lg:gap-5 md:lg:gap-5">
-          <MdOutlineMyLocation className="cursor-pointer tooltip tooltip-open tooltip-bottom" data-tip="hello"/>
-          <IoLocation className="cursor-pointer "/>
+          <MdOutlineMyLocation className="cursor-pointer tooltip tooltip-open tooltip-bottom" data-tip="hello" />
+          <IoLocation className="cursor-pointer " />
           <h1>{searchLocation}</h1>
           <div className="form-control">
             <form onSubmit={(event) => handleSubmitLocation(event)}>

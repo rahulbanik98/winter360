@@ -1,8 +1,9 @@
 'use client'
 import React, { FC, useEffect, useState } from 'react';
-import { Dynamicbodycontainer, Dynamicnavbar, Dynamicweathericon } from '@/components';
+import { Dynamicbodycontainer, Dynamicforecastweatherdetails, Dynamicnavbar, DynamicweatherDetails, Dynamicweathericon } from '@/components';
 import { getLiveData } from '@/utils/getData';
-import { convertToCelcius, getDayOrNightIcon } from '@/utils/Utilstempfunctions';
+import { convertToAMPM, convertToCelcius, convertWindSpeed, getDayOrNightIcon, metersToKilometers } from '@/utils/Utilstempfunctions';
+import { fromUnixTime } from 'date-fns';
 
 const Home: FC = () => {
   const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
@@ -28,7 +29,27 @@ const Home: FC = () => {
   const minTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_min;
   // console.log(weatherDataState?.data?.list[0]?.weather[0]?.icon);
   const loveIcons = weatherDataState?.data?.list[0]?.weather[0]?.icon
-  console.log("weatherDataState", weatherDataState);
+  console.log("weatherDataState", weatherDataState?.data);
+
+
+  const uniqueDates = [
+    ...new Set(
+      weatherDataState?.data?.list.map(
+        (entry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+      )
+    )
+  ];
+  console.log('uniqueDates', uniqueDates);
+
+  // Filtering data to get the first entry after 6 AM for each unique date
+  const firstDataForEachDate = uniqueDates.map((date) => {
+    return weatherDataState?.data?.list.find((entry) => {
+      const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
+      const entryTime = new Date(entry.dt * 1000).getHours();
+      return entryDate === date && entryTime >= 6;
+    });
+  });
+  console.log("firstDataForEachDate", firstDataForEachDate);
 
   return (
     <>
@@ -76,11 +97,22 @@ const Home: FC = () => {
             </Dynamicbodycontainer>
 
             <div className='flex gap-4'>
+              {/* LEFT */}
               <Dynamicbodycontainer className='w-fit justify-center flex-col px-4 items-center'>
-                <p>{
+                <p className='capitalize text-center'>{
                   weatherDataState?.data?.list[0]?.weather[0]?.description}</p>
                 <Dynamicweathericon iconName={getDayOrNightIcon(weatherDataState?.data?.list[0]?.weather[0]?.icon ?? "", weatherDataState?.data?.list[0]?.dt_txt ?? ""
                 )} />
+              </Dynamicbodycontainer>
+              <Dynamicbodycontainer className='bg-yellow-300/80 px-6 gap-4 justify-between overflow-x-auto'>
+                <DynamicweatherDetails
+                  visability={metersToKilometers(weatherDataState?.data?.list[0]?.visibility)}
+                  airPressure={`${weatherDataState?.data?.list[0]?.main?.pressure}`}
+                  humidity={`${weatherDataState?.data?.list[0]?.main?.humidity}%`}
+                  sunrise={convertToAMPM(weatherDataState?.data?.city?.sunrise) ?? 1702949452}
+                  sunset={convertToAMPM(weatherDataState?.data?.city.sunset) ?? 170251765}
+                  windSpeed={convertWindSpeed(weatherDataState?.data?.list[0]?.wind?.speed ?? 1.64)}
+                />
               </Dynamicbodycontainer>
             </div>
           </section>
@@ -88,7 +120,22 @@ const Home: FC = () => {
 
 
           <section className='flex w-full flex-col gap-4'>
-            <p className='text-2xl'>Forcust (7 Days)</p>
+            <p className='text-2xl'>Forecast (7 Days)</p>
+            {
+              firstDataForEachDate.map((value, key: string | number) => (
+                <Dynamicforecastweatherdetails
+                  key={key}
+                  visability={metersToKilometers(weatherDataState?.data?.list[0]?.visibility)}
+                  airPressure={`${weatherDataState?.data?.list[0]?.main?.pressure}`}
+                  humidity={`${weatherDataState?.data?.list[0]?.main?.humidity}%`}
+                  sunrise={convertToAMPM(weatherDataState?.data?.city?.sunrise) ?? 1702949452}
+                  sunset={convertToAMPM(weatherDataState?.data?.city.sunset) ?? 170251765}
+                  windSpeed={convertWindSpeed(weatherDataState?.data?.list[0]?.wind?.speed ?? 1.64)}
+                />
+              ))
+            }
+
+
           </section>
         </main>
       </div>
