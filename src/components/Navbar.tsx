@@ -11,7 +11,7 @@ const Navbar = () => {
   const [modeOfColor, setModeOfColor] = useAtom(lightDark);
   const [place, setPlace] = useAtom(placeAtom);
   const [searchLocation, setSearchLocation] = useState<
-    string | number | readonly string[] | undefined
+    string | number | readonly string[] | undefined | any
   >("Kolkata");
 
   const [error, setError] = useState<string>();
