@@ -1,26 +1,23 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { IoLocation } from "react-icons/io5";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { lightDark, placeAtom } from "@/app/atom";
 
-const Navbar = () => {
+interface NavbarProps {}
+
+const Navbar: React.FC<NavbarProps> = () => {
   const [modeOfColor, setModeOfColor] = useAtom(lightDark);
-  const [place, setPlace] = useAtom(placeAtom);
-  const [searchLocation, setSearchLocation] = useState<
-    string | number | readonly string[] | undefined | any
-  >("Kolkata");
+  const [, setPlace] = useAtom(placeAtom);
+  const [searchLocation, setSearchLocation] = useState<string>("Kolkata");
+  const [error, setError] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
-  const [error, setError] = useState<string>();
-  const [suggestions, setSuggestions] = useState<string[]>();
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const API_KEY: string = process.env.KEY || "";
 
-  const API_KEY = process.env.KEY;
-
-  const searchLocationFunction = async (value: string) => {
+  const searchLocationFunction = useCallback(async (value: string) => {
     setSearchLocation(value);
     if (value.length >= 3) {
       try {
@@ -29,7 +26,7 @@ const Navbar = () => {
         );
         const suggestions = response?.data?.list?.map(
           (item: any) => item.name
-        );
+        ) || [];
         setSuggestions(suggestions);
         setError("");
         setShowSuggestions(true);
@@ -42,19 +39,18 @@ const Navbar = () => {
       setSuggestions([]);
       setShowSuggestions(false);
     }
-  };
+  }, [API_KEY]);
 
-  const handleSubmitLocation = (event: string | any) => {
+  const handleSubmitLocation = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  };
+  }, []);
 
-  const handleSuggestionClick = (value: string) => {
+  const handleSuggestionClick = useCallback((value: string) => {
     setSearchLocation(value);
     setShowSuggestions(false);
-  };
-  setPlace(searchLocation);
+  }, []);
 
-  const handleCurrentLocation = () => {
+  const handleCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
@@ -67,7 +63,10 @@ const Navbar = () => {
         }
       });
     }
-  };
+  }, [API_KEY]);
+
+  setPlace(searchLocation);
+
   return (
     <>
       <div className={`navbar ${modeOfColor} border-[1px] border-b-slate-900`}>
@@ -76,14 +75,14 @@ const Navbar = () => {
         </div>
         <div className="flex-none lg:gap-5 md:lg:gap-5">
           <MdOutlineMyLocation
-            onClick={() => handleCurrentLocation()}
+            onClick={handleCurrentLocation}
             className="cursor-pointer tooltip tooltip-open tooltip-bottom"
             data-tip="hello"
           />
           <IoLocation className="cursor-pointer " />
           <h1>{searchLocation}</h1>
           <div className="form-control">
-            <form onSubmit={(event) => handleSubmitLocation(event)}>
+            <form onSubmit={handleSubmitLocation}>
               <input
                 type="text"
                 placeholder="Enter location"
@@ -92,14 +91,13 @@ const Navbar = () => {
                 value={searchLocation}
               />
               <button className="btn btn-outline btn-info ml-1">Search</button>
-              <Suggestionbox
-                {...{
-                  showSuggestions,
-                  suggestions,
-                  handleSuggestionClick,
-                  error,
-                }}
-              />
+              {showSuggestions && (
+                <Suggestionbox
+                  suggestions={suggestions}
+                  handleSuggestionClick={handleSuggestionClick}
+                  error={error}
+                />
+              )}
             </form>
           </div>
           <div className="w-5 rounded-full">
@@ -142,40 +140,31 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
-
-export function Suggestionbox({
-  showSuggestions,
-  suggestions,
-  handleSuggestionClick,
-  error,
-}: {
-  showSuggestions: boolean;
+interface SuggestionboxProps {
   suggestions: string[];
   handleSuggestionClick: (item: string) => void;
   error: string;
-}) {
-  return (
-    <>
-      {((showSuggestions && suggestions.length > 1) || error) && (
-        <ul
-          className="mb-4 bg-white absolute border top-[44px] left-0 border-gray-300 rounded-md min-w-[200px]
-    flex flex-col gap-1 py-2 px-2"
-        >
-          <li className="coursor-pointer p-1 rounded hover:bg-gray-200">
-            {error}
-          </li>
-          {suggestions?.map((item: string, key: string | number) => (
-            <li
-              key={key}
-              onClick={() => handleSuggestionClick(item)}
-              className="cursor-pointer p-1 rounded hover:bg-gray-200"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
 }
+
+const Suggestionbox: React.FC<SuggestionboxProps> = ({
+  suggestions,
+  handleSuggestionClick,
+  error,
+}) => (
+  <ul className="mb-4 bg-white absolute border top-[44px] left-0 border-gray-300 rounded-md min-w-[200px] flex flex-col gap-1 py-2 px-2">
+    <li className="coursor-pointer p-1 rounded hover:bg-gray-200">
+      {error}
+    </li>
+    {suggestions.map((item: string, index: number) => (
+      <li
+        key={index}
+        onClick={() => handleSuggestionClick(item)}
+        className="cursor-pointer p-1 rounded hover:bg-gray-200"
+      >
+        {item}
+      </li>
+    ))}
+  </ul>
+);
+
+export default Navbar;

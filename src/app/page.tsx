@@ -197,7 +197,7 @@ const Home: FC = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p className="">Pre-Alpha | &copy; 2024 Rahul Banik</p>
+        <p className="">Pre-Alpha 1.5| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );
