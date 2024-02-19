@@ -27,7 +27,7 @@ const Navbar = () => {
         const response = await axios.get(
           `https://api.openweathermap.org/data/2.5/find?q=${value}&appid=${API_KEY}`
         );
-        const suggestions = weatherDataState?.data?.list?.map(
+        const suggestions = response?.data?.list?.map(
           (item: any) => item.name
         );
         setSuggestions(suggestions);
