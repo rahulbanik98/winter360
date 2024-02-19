@@ -3,32 +3,83 @@
 import React, { useState } from "react";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { IoLocation } from "react-icons/io5";
+import axios from "axios";
+import { useAtom } from "jotai";
+import { lightDark, placeAtom } from "@/app/atom";
 
 const Navbar = () => {
+  const [modeOfColor, setModeOfColor] = useAtom(lightDark);
+  const [place, setPlace] = useAtom(placeAtom);
   const [searchLocation, setSearchLocation] = useState<
     string | number | readonly string[] | undefined
   >("Kolkata");
 
-  const [error, setError] = useState()
-  const [suggestions, setSuggestions] = useState<string[]>()
-  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [error, setError] = useState<string>();
+  const [suggestions, setSuggestions] = useState<string[]>();
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const searchLocationFunction = (event: string | any) => {
-    setSearchLocation(event.target.value);
+  const API_KEY = process.env.KEY;
+
+  const searchLocationFunction = async (value: string) => {
+    setSearchLocation(value);
+    if (value.length >= 3) {
+      try {
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/find?q=${value}&appid=${API_KEY}`
+        );
+        const suggestions = weatherDataState?.data?.list?.map(
+          (item: any) => item.name
+        );
+        setSuggestions(suggestions);
+        setError("");
+        setShowSuggestions(true);
+      } catch (error) {
+        console.log("face error in search api call function", error);
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
   };
 
   const handleSubmitLocation = (event: string | any) => {
     event.preventDefault();
   };
 
+  const handleSuggestionClick = (value: string) => {
+    setSearchLocation(value);
+    setShowSuggestions(false);
+  };
+  setPlace(searchLocation);
+
+  const handleCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
+          );
+        } catch (error) {
+          console.log("error in click and get live location", error);
+        }
+      });
+    }
+  };
   return (
     <>
-      <div className="navbar bg-base-100">
+      <div className={`navbar ${modeOfColor} border-[1px] border-b-slate-900`}>
         <div className="flex-1">
           <p className="btn btn-ghost text-xl">Winter360°</p>
         </div>
         <div className="flex-none lg:gap-5 md:lg:gap-5">
-          <MdOutlineMyLocation className="cursor-pointer tooltip tooltip-open tooltip-bottom" data-tip="hello" />
+          <MdOutlineMyLocation
+            onClick={() => handleCurrentLocation()}
+            className="cursor-pointer tooltip tooltip-open tooltip-bottom"
+            data-tip="hello"
+          />
           <IoLocation className="cursor-pointer " />
           <h1>{searchLocation}</h1>
           <div className="form-control">
@@ -36,9 +87,18 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Enter location"
-                className="input input-bordered w-24 md:w-auto"
-                onChange={(event) => searchLocationFunction(event)}
+                className={`input input-bordered w-24 md:w-auto ${modeOfColor}`}
+                onChange={(event) => searchLocationFunction(event.target.value)}
                 value={searchLocation}
+              />
+              <button className="btn btn-outline btn-info ml-1">Search</button>
+              <Suggestionbox
+                {...{
+                  showSuggestions,
+                  suggestions,
+                  handleSuggestionClick,
+                  error,
+                }}
               />
             </form>
           </div>
@@ -55,6 +115,7 @@ const Navbar = () => {
 
               {/* sun icon */}
               <svg
+                onClick={() => setModeOfColor("base-content")}
                 className="swap-on fill-current w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -64,6 +125,7 @@ const Navbar = () => {
 
               {/* moon icon */}
               <svg
+                onClick={() => setModeOfColor("bg-base-100")}
                 className="swap-off fill-current w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -81,3 +143,39 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+export function Suggestionbox({
+  showSuggestions,
+  suggestions,
+  handleSuggestionClick,
+  error,
+}: {
+  showSuggestions: boolean;
+  suggestions: string[];
+  handleSuggestionClick: (item: string) => void;
+  error: string;
+}) {
+  return (
+    <>
+      {((showSuggestions && suggestions.length > 1) || error) && (
+        <ul
+          className="mb-4 bg-white absolute border top-[44px] left-0 border-gray-300 rounded-md min-w-[200px]
+    flex flex-col gap-1 py-2 px-2"
+        >
+          <li className="coursor-pointer p-1 rounded hover:bg-gray-200">
+            {error}
+          </li>
+          {suggestions?.map((item: string, key: string | number) => (
+            <li
+              key={key}
+              onClick={() => handleSuggestionClick(item)}
+              className="cursor-pointer p-1 rounded hover:bg-gray-200"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
