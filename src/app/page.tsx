@@ -36,7 +36,7 @@ const Home: FC = () => {
   const [place, setPlace] = useAtom(placeAtom);
   const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
 
-  console.log("place", place);
+  // console.log("place", place);
 
   const fetchData = async () => {
     try {
@@ -58,7 +58,7 @@ const Home: FC = () => {
   const minTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_min;
   // console.log(weatherDataState?.data?.list[0]?.weather[0]?.icon);
   const loveIcons = weatherDataState?.data?.list[0]?.weather[0]?.icon;
-  console.log("weatherDataState", weatherDataState);
+  // console.log("weatherDataState", weatherDataState);
 
   const uniqueDates = [
     ...new Set(
@@ -67,7 +67,7 @@ const Home: FC = () => {
       )
     ),
   ];
-  console.log("uniqueDates", uniqueDates);
+  // console.log("uniqueDates", uniqueDates);
 
   // Filtering data to get the first entry after 6 AM for each unique date
   const firstDataForEachDate: (WeatherEntry | undefined)[] = uniqueDates.map(
@@ -81,7 +81,7 @@ const Home: FC = () => {
       });
     }
   );
-  console.log("firstDataForEachDate", firstDataForEachDate);
+  // console.log("firstDataForEachDate", firstDataForEachDate);
 
   return (
     <>
@@ -122,7 +122,7 @@ const Home: FC = () => {
                   >
                     <p className="whitespace-nowrap">{value.dt_txt}</p>
                     <Dynamicweathericon
-                      iconName={getDayOrNightIcon(
+                      iconname={getDayOrNightIcon(
                         weatherDataState?.data?.list[0]?.weather[0]?.icon,
                         weatherDataState?.data?.list[0]?.dt_txt
                       )}
@@ -140,7 +140,7 @@ const Home: FC = () => {
                   {weatherDataState?.data?.list[0]?.weather[0]?.description}
                 </p>
                 <Dynamicweathericon
-                  iconName={getDayOrNightIcon(
+                  iconname={getDayOrNightIcon(
                     weatherDataState?.data?.list[0]?.weather[0]?.icon ?? "",
                     weatherDataState?.data?.list[0]?.dt_txt ?? ""
                   )}
@@ -197,7 +197,7 @@ const Home: FC = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p className="">Pre-Alpha 1.5| &copy; 2024 Rahul Banik</p>
+        <p className="">Pre-Alpha 1.5.1| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );

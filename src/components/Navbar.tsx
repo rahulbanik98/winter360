@@ -4,13 +4,13 @@ import { IoLocation } from "react-icons/io5";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { lightDark, placeAtom } from "@/app/atom";
+import { getLiveData } from "@/utils/getData";
 
-interface NavbarProps {}
+interface NavbarProps { }
 
 const Navbar: React.FC<NavbarProps> = () => {
+  const [place, setPlace] = useAtom(placeAtom);
   const [modeOfColor, setModeOfColor] = useAtom(lightDark);
-  const [, setPlace] = useAtom(placeAtom);
-  const [searchLocation, setSearchLocation] = useState<string>("Kolkata");
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const API_KEY: string = process.env.KEY || "";
 
   const searchLocationFunction = useCallback(async (value: string) => {
-    setSearchLocation(value);
+    setPlace(value);
     if (value.length >= 3) {
       try {
         const response = await axios.get(
@@ -46,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   }, []);
 
   const handleSuggestionClick = useCallback((value: string) => {
-    setSearchLocation(value);
+    setPlace(value);
     setShowSuggestions(false);
   }, []);
 
@@ -65,7 +65,12 @@ const Navbar: React.FC<NavbarProps> = () => {
     }
   }, [API_KEY]);
 
-  setPlace(searchLocation);
+  console.log("place", place);
+
+  const submitLiveLocation = async () => {
+    console.log("click");
+    await getLiveData(place)
+  }
 
   return (
     <>
@@ -80,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             data-tip="hello"
           />
           <IoLocation className="cursor-pointer " />
-          <h1>{searchLocation}</h1>
+          <h1>{place}</h1>
           <div className="form-control">
             <form onSubmit={handleSubmitLocation}>
               <input
@@ -88,9 +93,9 @@ const Navbar: React.FC<NavbarProps> = () => {
                 placeholder="Enter location"
                 className={`input input-bordered w-24 md:w-auto ${modeOfColor}`}
                 onChange={(event) => searchLocationFunction(event.target.value)}
-                value={searchLocation}
+                value={place}
               />
-              <button className="btn btn-outline btn-info ml-1">Search</button>
+              <button className="btn btn-outline btn-info ml-1" onClick={() => submitLiveLocation()}>Search</button>
               {showSuggestions && (
                 <Suggestionbox
                   suggestions={suggestions}
