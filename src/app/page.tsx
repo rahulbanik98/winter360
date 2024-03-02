@@ -1,4 +1,3 @@
-"use client";
 import React, { FC, useEffect, useState } from "react";
 import {
   Dynamicbodycontainer,
@@ -34,9 +33,7 @@ interface WeatherDataState {
 
 const Home: FC = () => {
   const [place] = useAtom(placeAtom);
-  const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
-  // const [navData, setNavData] = useState<undefined[] | object>([]);
-
+  const [weatherDataState, setWeatherDataState] = useState<WeatherDataState | undefined>();
   const [navData, setNavData] = useAtom(pullData);
 
   const fetchData = async () => {
@@ -66,7 +63,6 @@ const Home: FC = () => {
       )
     ),
   ];
-  // console.log("uniqueDates", uniqueDates);
 
   // Filtering data to get the first entry after 6 AM for each unique date
   const firstDataForEachDate: (WeatherEntry | undefined)[] = uniqueDates.map(
@@ -80,7 +76,7 @@ const Home: FC = () => {
       });
     }
   );
-  // console.log("firstDataForEachDate", firstDataForEachDate);
+
   console.log("place", place);
   return (
     <>
