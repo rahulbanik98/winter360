@@ -3,61 +3,71 @@ import { MdOutlineMyLocation } from "react-icons/md";
 import { IoLocation } from "react-icons/io5";
 import axios from "axios";
 import { useAtom } from "jotai";
-import { lightDark, placeAtom } from "@/app/atom";
+import { lightDark, placeAtom, pullData } from "@/app/atom";
 import { getLiveData } from "@/utils/getData";
 
-interface NavbarProps { }
+interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
   const [place, setPlace] = useAtom(placeAtom);
+  // const [navData, setNavData] = useAtom(pullData);
   const [modeOfColor, setModeOfColor] = useAtom(lightDark);
+  const [navData, setNavData] = useAtom(pullData);
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-
+  const [temp, settemp] = useState();
   const API_KEY: string = process.env.KEY || "";
 
-  const searchLocationFunction = useCallback(async (value: string) => {
-    setPlace(value);
-    if (value.length >= 3) {
-      try {
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/find?q=${value}&appid=${API_KEY}`
-        );
-        const suggestions = response?.data?.list?.map(
-          (item: any) => item.name
-        ) || [];
-        setSuggestions(suggestions);
-        setError("");
-        setShowSuggestions(true);
-      } catch (error) {
-        console.log("face error in search api call function", error);
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, [API_KEY]);
+  // const searchLocationFunction = useCallback(
+  //   async (value: string) => {
+  //     if (value.length >= 3) {
+  //       try {
+  //         const response = await axios.get(
+  //           `https://api.openweathermap.org/data/2.5/find?q=${value}&appid=${API_KEY}`
+  //         );
+  //         const suggestions =
+  //           response?.data?.list?.map((item: any) => item.name) || [];
+  //         setSuggestions(suggestions);
+  //         setError("");
+  //         setShowSuggestions(true);
+  //       } catch (error) {
+  //         console.log("face error in search api call function", error);
+  //         setSuggestions([]);
+  //         setShowSuggestions(false);
+  //       }
+  //     } else {
+  //       setSuggestions([]);
+  //       setShowSuggestions(false);
+  //     }
+  //   },
+  //   [API_KEY]
+  // );
 
-  const handleSubmitLocation = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  }, []);
+  const handleSubmitLocation = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+    },
+    []
+  );
 
   const handleSuggestionClick = useCallback((value: string) => {
     setPlace(value);
     setShowSuggestions(false);
   }, []);
 
+  // ----------------For Lat Long temparature----------------------
   const handleCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
         try {
           const response = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c7c2019001c1b2b74632c8200ad139e5&cnt=56`
           );
+          // settemp(response);
+          console.log("response", response);
+          settemp(response);
         } catch (error) {
           console.log("error in click and get live location", error);
         }
@@ -65,12 +75,20 @@ const Navbar: React.FC<NavbarProps> = () => {
     }
   }, [API_KEY]);
 
-  console.log("place", place);
+  // ----------------For Lat Long temparature----------------------
 
   const submitLiveLocation = async () => {
-    console.log("click");
-    await getLiveData(place)
-  }
+    // getLiveData();
+    // console.log("place", place);
+    // console.log("click");
+    const response = await getLiveData(place)
+    // const response = await axios.get(
+    //   `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=c7c2019001c1b2b74632c8200ad139e5&cnt=56`
+    //   // `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=c7c2019001c1b2b74632c8200ad139e5&cnt=56`
+    // );
+    setNavData(response);
+  };
+  console.log("navData", navData);
 
   return (
     <>
@@ -85,17 +103,23 @@ const Navbar: React.FC<NavbarProps> = () => {
             data-tip="hello"
           />
           <IoLocation className="cursor-pointer " />
-          <h1>{place}</h1>
+          <h1>{navData?.data?.city?.name || temp?.data?.name }</h1>
           <div className="form-control">
             <form onSubmit={handleSubmitLocation}>
               <input
                 type="text"
                 placeholder="Enter location"
                 className={`input input-bordered w-24 md:w-auto ${modeOfColor}`}
-                onChange={(event) => searchLocationFunction(event.target.value)}
+                // onChange={(event) => searchLocationFunction(event.target.value)}
+                onChange={(event) => setPlace(event.target.value)}
                 value={place}
               />
-              <button className="btn btn-outline btn-info ml-1" onClick={() => submitLiveLocation()}>Search</button>
+              <button
+                className="btn btn-outline btn-info ml-1"
+                onClick={() => submitLiveLocation()}
+              >
+                Search
+              </button>
               {showSuggestions && (
                 <Suggestionbox
                   suggestions={suggestions}
@@ -157,9 +181,7 @@ const Suggestionbox: React.FC<SuggestionboxProps> = ({
   error,
 }) => (
   <ul className="mb-4 bg-white absolute border top-[44px] left-0 border-gray-300 rounded-md min-w-[200px] flex flex-col gap-1 py-2 px-2">
-    <li className="coursor-pointer p-1 rounded hover:bg-gray-200">
-      {error}
-    </li>
+    <li className="coursor-pointer p-1 rounded hover:bg-gray-200">{error}</li>
     {suggestions.map((item: string, index: number) => (
       <li
         key={index}

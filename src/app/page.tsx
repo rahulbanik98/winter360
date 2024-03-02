@@ -16,7 +16,7 @@ import {
   metersToKilometers,
 } from "@/utils/Utilstempfunctions";
 import { fromUnixTime } from "date-fns";
-import { placeAtom } from "./atom";
+import { placeAtom, pullData } from "./atom";
 import { useAtom } from "jotai";
 
 interface WeatherEntry {
@@ -33,10 +33,11 @@ interface WeatherDataState {
 }
 
 const Home: FC = () => {
-  const [place, setPlace] = useAtom(placeAtom);
+  const [place] = useAtom(placeAtom);
   const [weatherDataState, setWeatherDataState] = useState<undefined | any>();
+  // const [navData, setNavData] = useState<undefined[] | object>([]);
 
-  // console.log("place", place);
+  const [navData, setNavData] = useAtom(pullData);
 
   const fetchData = async () => {
     try {
@@ -51,18 +52,16 @@ const Home: FC = () => {
     fetchData();
   }, []);
 
-  const todayData: string | undefined = weatherDataState?.data?.list[0]?.dt_txt;
-  const feelLikeTemp = weatherDataState?.data?.list[0]?.main?.feels_like;
-  const temprature = weatherDataState?.data?.list[0]?.main?.temp;
-  const maxTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_max;
-  const minTodayTemp = weatherDataState?.data?.list[0]?.main?.temp_min;
-  // console.log(weatherDataState?.data?.list[0]?.weather[0]?.icon);
-  const loveIcons = weatherDataState?.data?.list[0]?.weather[0]?.icon;
-  // console.log("weatherDataState", weatherDataState);
+  const todayData: string | undefined = navData?.data?.list[0]?.dt_txt;
+  const feelLikeTemp = navData?.data?.list[0]?.main?.feels_like;
+  const temprature = navData?.data?.list[0]?.main?.temp;
+  const maxTodayTemp = navData?.data?.list[0]?.main?.temp_max;
+  const minTodayTemp = navData?.data?.list[0]?.main?.temp_min;
+  const loveIcons = navData?.data?.list[0]?.weather[0]?.icon;
 
   const uniqueDates = [
     ...new Set(
-      weatherDataState?.data?.list.map(
+      navData?.data?.list.map(
         (entry: any) => new Date(entry.dt * 1000).toISOString().split("T")[0]
       )
     ),
@@ -72,7 +71,7 @@ const Home: FC = () => {
   // Filtering data to get the first entry after 6 AM for each unique date
   const firstDataForEachDate: (WeatherEntry | undefined)[] = uniqueDates.map(
     (date: string | any) => {
-      return weatherDataState?.data?.list.find((entry: WeatherEntry) => {
+      return navData?.data?.list.find((entry: WeatherEntry) => {
         const entryDate: string = new Date(entry.dt * 1000)
           .toISOString()
           .split("T")[0];
@@ -82,11 +81,11 @@ const Home: FC = () => {
     }
   );
   // console.log("firstDataForEachDate", firstDataForEachDate);
-
+  console.log("place", place);
   return (
     <>
       <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
-        <Dynamicnavbar />
+        <Dynamicnavbar setNavData={setNavData} />
         <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
           <section className="space-y-4">
             <div className="space-y-2">
@@ -197,7 +196,7 @@ const Home: FC = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p className="">Pre-Alpha 1.5.1| &copy; 2024 Rahul Banik</p>
+        <p className="">Pre-Alpha 1.5.3| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );
