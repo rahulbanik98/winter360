@@ -32,6 +32,7 @@ interface WeatherDataState {
   // Add other properties as needed
 }
 
+
 const Home: FC = () => {
   const [place] = useAtom(placeAtom);
   const [weatherDataState, setWeatherDataState] = useState<WeatherDataState | undefined>();
