@@ -11,7 +11,7 @@ interface NavbarProps {}
 const Navbar: React.FC<NavbarProps> = () => {
   const [place, setPlace] = useAtom(placeAtom);
   const [modeOfColor, setModeOfColor] = useAtom(lightDark);
-  const [navData, setNavData] = useAtom<any>(pullData);
+  const [navData, setNavData] = useAtom(pullData);
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
