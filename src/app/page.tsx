@@ -1,3 +1,5 @@
+"use client"
+
 import React, { FC, useEffect, useState } from "react";
 import {
   Dynamicbodycontainer,
@@ -14,7 +16,6 @@ import {
   getDayOrNightIcon,
   metersToKilometers,
 } from "@/utils/Utilstempfunctions";
-import { fromUnixTime } from "date-fns";
 import { placeAtom, pullData } from "./atom";
 import { useAtom } from "jotai";
 
