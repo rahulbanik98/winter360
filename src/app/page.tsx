@@ -1,5 +1,3 @@
-"use client"
-
 import React, { FC, useEffect, useState } from "react";
 import {
   Dynamicbodycontainer,
@@ -27,20 +25,30 @@ interface WeatherEntry {
 interface WeatherDataState {
   data: {
     list: WeatherEntry[];
+
     // Add other properties as needed
   };
   // Add other properties as needed
 }
 
+interface NavDataState {
+  data: {
+    list: WeatherEntry[];
+    // Add other properties as needed
+  };
+  // Add other properties as needed
+}
 
-const Home: FC = () => {
+interface Props { }
+
+const Home: FC<Props> = () => {
   const [place] = useAtom(placeAtom);
-  const [weatherDataState, setWeatherDataState] = useState<WeatherDataState | undefined>();
-  const [navData, setNavData] = useAtom(pullData);
+  const [weatherDataState, setWeatherDataState] = useState<WeatherDataState | undefined | any>();
+  const [navData, setNavData] = useAtom<NavDataState | any>(pullData);
 
   const fetchData = async () => {
     try {
-      const liveWeatherData = await getLiveData(place);
+      const liveWeatherData: WeatherDataState = await getLiveData(place);
       setWeatherDataState(liveWeatherData);
     } catch (error) {
       console.log("API not working", error);
@@ -58,17 +66,17 @@ const Home: FC = () => {
   const minTodayTemp = navData?.data?.list[0]?.main?.temp_min;
   const loveIcons = navData?.data?.list[0]?.weather[0]?.icon;
 
-  const uniqueDates = [
+  const uniqueDates: string[] | unknown[] | any = [
     ...new Set(
       navData?.data?.list.map(
-        (entry: any) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+        (entry: WeatherEntry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
       )
     ),
   ];
 
   // Filtering data to get the first entry after 6 AM for each unique date
   const firstDataForEachDate: (WeatherEntry | undefined)[] = uniqueDates.map(
-    (date: string | any) => {
+    (date: string) => {
       return navData?.data?.list.find((entry: WeatherEntry) => {
         const entryDate: string = new Date(entry.dt * 1000)
           .toISOString()
