@@ -46,7 +46,7 @@ interface Props { }
 const Home: FC<Props> = () => {
   const [place] = useAtom(placeAtom);
   const [weatherDataState, setWeatherDataState] = useState<WeatherDataState | undefined | any>();
-  const [navData, setNavData] = useAtom<NavDataState | any>(pullData);
+  const [navData, setNavData] = useAtom<any>(pullData);
 
   const fetchData = async () => {
     try {
@@ -93,7 +93,7 @@ const Home: FC<Props> = () => {
   return (
     <>
       <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
-        <Dynamicnavbar setNavData={setNavData} />
+        <Dynamicnavbar />
         <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
           <section className="space-y-4">
             <div className="space-y-2">

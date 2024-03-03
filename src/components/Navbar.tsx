@@ -11,7 +11,7 @@ interface NavbarProps {}
 const Navbar: React.FC<NavbarProps> = () => {
   const [place, setPlace] = useAtom(placeAtom);
   const [modeOfColor, setModeOfColor] = useAtom(lightDark);
-  const [navData, setNavData] = useAtom(pullData);
+  const [navData, setNavData] = useAtom<any>(pullData);
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = () => {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
         try {
-          const response = await axios.get(
+          const response: any = await axios.get(
             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c7c2019001c1b2b74632c8200ad139e5&cnt=56`
           );
           setTemp(response);
@@ -110,7 +110,7 @@ const Suggestionbox: React.FC<SuggestionboxProps> = ({
   error,
 }) => (
   <ul className="mb-4 bg-white absolute border top-[44px] left-0 border-gray-300 rounded-md min-w-[200px] flex flex-col gap-1 py-2 px-2">
-    <li className="coursor-pointer p-1 rounded hover:bg-gray-200">{error}</li>
+    <li className="cursor-pointer p-1 rounded hover:bg-gray-200">{error}</li>
     {suggestions.map((item: string, index: number) => (
       <li
         key={index}
