@@ -59,7 +59,7 @@ const Home: FC<Props> = () => {
     fetchData();
   }, []);
 
-  const todayData: string | undefined = navData?.data?.list[0]?.dt_txt;
+  const todayData: string | undefined | any = navData?.data?.list[0]?.dt_txt;
   const feelLikeTemp = navData?.data?.list[0]?.main?.feels_like;
   const temprature = navData?.data?.list[0]?.main?.temp;
   const maxTodayTemp = navData?.data?.list[0]?.main?.temp_max;
