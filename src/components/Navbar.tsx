@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { IoLocation } from "react-icons/io5";
 import axios from "axios";
@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           );
           setTemp(response);
         } catch (error) {
-          console.log("error in click and get live location", error);
+          console.log("error in click and get live location || ", error);
         }
       });
     }
@@ -50,7 +50,14 @@ const Navbar: React.FC<NavbarProps> = () => {
     const response = await getLiveData(place);
     setNavData(response);
   };
+  
+  useEffect(() => {
+    submitLiveLocation();
+  }, []);
 
+  // console.log("navData", navData);
+  // console.log("temp", temp);
+  
   return (
     <>
       <div className={`navbar ${modeOfColor} border-[1px] border-b-slate-900`}>
@@ -63,8 +70,12 @@ const Navbar: React.FC<NavbarProps> = () => {
             className="cursor-pointer tooltip tooltip-open tooltip-bottom"
             data-tip="hello"
           />
-          <IoLocation className="cursor-pointer " />
-          <h1>{navData?.data?.city?.name || temp?.data?.name}</h1>
+          <IoLocation className="" />
+          {navData?.data?.city?.country ? (
+            <h1>{`${navData?.data?.city?.country}, ${
+              navData?.data?.city?.name || temp?.data?.name
+            }`}</h1>
+          ) : null}
           <div className="form-control">
             <form onSubmit={handleSubmitLocation}>
               <input
@@ -89,9 +100,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               )}
             </form>
           </div>
-          <div className="w-5 rounded-full">
-            {/* Dark mode components */}
-          </div>
+          <div className="w-5 rounded-full">{/* Dark mode components */}</div>
         </div>
       </div>
     </>

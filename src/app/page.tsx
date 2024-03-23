@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { FC, useEffect, useState } from "react";
 import {
@@ -41,12 +41,14 @@ interface NavDataState {
   // Add other properties as needed
 }
 
-interface Props { }
+interface Props {}
 
 const Home: FC<Props> = () => {
   const [place] = useAtom(placeAtom);
-  const [weatherDataState, setWeatherDataState] = useState<WeatherDataState | undefined | any>();
-  const [navData, setNavData] = useAtom<any>(pullData);
+  const [weatherDataState, setWeatherDataState] = useState<
+    WeatherDataState | undefined | any
+  >();
+  const [navData] = useAtom<any>(pullData);
 
   const fetchData = async () => {
     try {
@@ -61,7 +63,7 @@ const Home: FC<Props> = () => {
     fetchData();
   }, []);
 
-  const todayData: string | undefined | any = navData?.data?.list[0]?.dt_txt;
+  // const todayData: string | undefined | any = navData?.data?.list[0]?.dt_txt;
   const feelLikeTemp = navData?.data?.list[0]?.main?.feels_like;
   const temprature = navData?.data?.list[0]?.main?.temp;
   const maxTodayTemp = navData?.data?.list[0]?.main?.temp_max;
@@ -71,7 +73,8 @@ const Home: FC<Props> = () => {
   const uniqueDates: string[] | unknown[] | any = [
     ...new Set(
       navData?.data?.list.map(
-        (entry: WeatherEntry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+        (entry: WeatherEntry) =>
+          new Date(entry.dt * 1000).toISOString().split("T")[0]
       )
     ),
   ];
@@ -89,7 +92,10 @@ const Home: FC<Props> = () => {
     }
   );
 
-  console.log("place", place);
+  // console.log("todayData", todayData);
+  console.log("navData", navData);
+  console.log("firstDataForEachDate", firstDataForEachDate);
+
   return (
     <>
       <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
@@ -98,31 +104,70 @@ const Home: FC<Props> = () => {
           <section className="space-y-4">
             <div className="space-y-2">
               <h2 className="flex gap-1 text-2xl items-end">
-                <p>{todayData}</p>
+                <p>{navData?.data?.list[0]?.dt_txt}</p>
               </h2>
             </div>
             <Dynamicbodycontainer className="gap-10 px-6 items-center">
-              <div className="flex flex-col px-4">
-                <span className="text-5xl">
-                  {parseInt(convertToCelcius(temprature || "0"))}°
-                </span>
-                <p className="text-xs space-x-1 whitespace-nowrap">
+              <div className="flex flex-col px-6">
+                {temprature ? (
+                  // <span className="text-5xl mb-10">
+                  //   {parseInt(convertToCelcius(temprature))}°
+                  // </span>
+
+                  <div className="shadow-md mb-4">
+                    <div className="w-full h-20 rounded px-5 mb-2">
+                      <span className="text-5xl">
+                        {parseInt(convertToCelcius(temprature))}°
+                      </span>
+                    </div>
+                    <div className="w-full h-4 rounded mb-2">
+                      <p className="text-xs space-x-1 whitespace-nowrap">
+                        <span>Feels like</span>
+                        <span>
+                          {parseInt(convertToCelcius(feelLikeTemp || "0"))}°
+                        </span>
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="w-2/3 h-4 rounded mb-2">
+                        <p className="text-xs space-x-2">
+                          {parseInt(convertToCelcius(maxTodayTemp || "0"))}°↑
+                        </p>
+                      </div>
+                      <div className="w-2/3 h-4 rounded mb-2">
+                        <p className="text-xs space-x-2">
+                          {parseInt(convertToCelcius(minTodayTemp || "0"))}°↓
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-white shadow-md animate-pulse mb-4">
+                    <div className="w-full h-20 bg-gray-300 rounded px-10 mb-2"></div>
+                    <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
+                    <div className="flex gap-2">
+                      <div className="w-2/3 h-4 bg-gray-300 rounded mb-2"></div>
+                      <div className="w-2/3 h-4 bg-gray-300 rounded mb-2"></div>
+                    </div>
+                  </div>
+                )}
+                {/* <p className="text-xs space-x-1 whitespace-nowrap">
                   <span>Feels like</span>
                   <span>
                     {parseInt(convertToCelcius(feelLikeTemp || "0"))}°
                   </span>
-                </p>
-                <div className="flex gap-4">
+                </p> */}
+                {/* <div className="flex gap-4">
                   <p className="text-xs space-x-2">
                     {parseInt(convertToCelcius(maxTodayTemp || "0"))}°↑
                   </p>
                   <p className="text-xs space-x-2">
                     {parseInt(convertToCelcius(minTodayTemp || "0"))}°↓
                   </p>
-                </div>
+                </div> */}
               </div>
               <div className="flex gap-10 sm:gap-16 overflow-x-auto w-full justify-between pr-3">
-                {weatherDataState?.data?.list?.map((value: any, key: any) => (
+                {navData?.data?.list?.map((value: any, key: any) => (
                   <div
                     key={key}
                     className="flex flex-col justify-between gap-2 items-center text-xs font-semibold"
@@ -130,8 +175,8 @@ const Home: FC<Props> = () => {
                     <p className="whitespace-nowrap">{value.dt_txt}</p>
                     <Dynamicweathericon
                       iconname={getDayOrNightIcon(
-                        weatherDataState?.data?.list[0]?.weather[0]?.icon,
-                        weatherDataState?.data?.list[0]?.dt_txt
+                        navData?.data?.list[0]?.weather[0]?.icon,
+                        navData?.data?.list[0]?.dt_txt
                       )}
                     />
                     <p>{parseInt(convertToCelcius(temprature || "0"))}°</p>
@@ -144,32 +189,30 @@ const Home: FC<Props> = () => {
               {/* LEFT */}
               <Dynamicbodycontainer className="w-fit justify-center flex-col px-4 items-center">
                 <p className="capitalize text-center">
-                  {weatherDataState?.data?.list[0]?.weather[0]?.description}
+                  {navData?.data?.list[0]?.weather[0]?.description}
                 </p>
                 <Dynamicweathericon
                   iconname={getDayOrNightIcon(
-                    weatherDataState?.data?.list[0]?.weather[0]?.icon ?? "",
-                    weatherDataState?.data?.list[0]?.dt_txt ?? ""
+                    navData?.data?.list[0]?.weather[0]?.icon ?? "",
+                    navData?.data?.list[0]?.dt_txt ?? ""
                   )}
                 />
               </Dynamicbodycontainer>
               <Dynamicbodycontainer className="bg-yellow-300/80 px-6 gap-4 justify-between overflow-x-auto">
                 <DynamicweatherDetails
                   visability={metersToKilometers(
-                    weatherDataState?.data?.list[0]?.visibility
+                    navData?.data?.list[0]?.visibility
                   )}
-                  airPressure={`${weatherDataState?.data?.list[0]?.main?.pressure}`}
-                  humidity={`${weatherDataState?.data?.list[0]?.main?.humidity}%`}
+                  airPressure={`${navData?.data?.list[0]?.main?.pressure}`}
+                  humidity={`${navData?.data?.list[0]?.main?.humidity}%`}
                   sunrise={
-                    convertToAMPM(weatherDataState?.data?.city?.sunrise) ??
-                    1702949452
+                    convertToAMPM(navData?.data?.city?.sunrise) ?? 1702949452
                   }
                   sunset={
-                    convertToAMPM(weatherDataState?.data?.city.sunset) ??
-                    170251765
+                    convertToAMPM(navData?.data?.city.sunset) ?? 170251765
                   }
                   windSpeed={convertWindSpeed(
-                    weatherDataState?.data?.list[0]?.wind?.speed ?? 1.64
+                    navData?.data?.list[0]?.wind?.speed ?? 1.64
                   )}
                 />
               </Dynamicbodycontainer>
@@ -178,25 +221,21 @@ const Home: FC<Props> = () => {
 
           <section className="flex w-full flex-col gap-4">
             <p className="text-2xl">Forecast (7 Days)</p>
-            {firstDataForEachDate.map((value, key: string | number) => (
+            {firstDataForEachDate.map((value: any, key: string | number) => (
               <Dynamicforecastweatherdetails
                 key={key}
-                visability={metersToKilometers(
-                  weatherDataState?.data?.list[0]?.visibility
-                )}
-                airPressure={`${weatherDataState?.data?.list[0]?.main?.pressure}`}
-                humidity={`${weatherDataState?.data?.list[0]?.main?.humidity}%`}
+                weatehrIcon={value?.weather[0]?.icon}
+                temprature={value?.main?.temp}
+                feels_like={value?.main?.feels_like}
+                date={value?.dt_txt}
+                visability={metersToKilometers(value?.visibility)}
+                humidity={`${value?.main?.humidity}%`}
+                windSpeed={convertWindSpeed(value?.main?.speed ?? 1.64)}
+                airPressure={`${value?.main?.pressure}`}
                 sunrise={
-                  convertToAMPM(weatherDataState?.data?.city?.sunrise) ??
-                  1702949452
+                  convertToAMPM(navData?.data?.city?.sunrise) ?? 1702949452
                 }
-                sunset={
-                  convertToAMPM(weatherDataState?.data?.city.sunset) ??
-                  170251765
-                }
-                windSpeed={convertWindSpeed(
-                  weatherDataState?.data?.list[0]?.wind?.speed ?? 1.64
-                )}
+                sunset={convertToAMPM(navData?.data?.city.sunset) ?? 170251765}
               />
             ))}
           </section>
@@ -204,7 +243,7 @@ const Home: FC<Props> = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p className="">Pre-Alpha 1.5.3| &copy; 2024 Rahul Banik</p>
+        <p className="">Beta 1.3| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );

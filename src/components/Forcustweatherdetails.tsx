@@ -1,6 +1,12 @@
-import { metersToKilometers } from "@/utils/Utilstempfunctions";
-import { Dynamicbodycontainer, DynamicweatherDetails, Dynamicweathericon } from ".";
-
+import {
+  convertToCelcius,
+  metersToKilometers,
+} from "@/utils/Utilstempfunctions";
+import {
+  Dynamicbodycontainer,
+  DynamicweatherDetails,
+  Dynamicweathericon,
+} from ".";
 
 export interface ForecastWeatherDetailProps {
   weatehrIcon: string;
@@ -20,9 +26,9 @@ export default function ForecastWeatherDetail(
     weatehrIcon = "02d",
     date = "19.09",
     day = "Tuesday",
-    temp,
+    temprature,
     feels_like,
-    description
+    description,
   } = props;
   return (
     <Dynamicbodycontainer className="gap-4">
@@ -36,10 +42,15 @@ export default function ForecastWeatherDetail(
 
         {/*  */}
         <div className="flex flex-col px-4">
-          <span className="text-5xl">{metersToKilometers(temp ?? 0)}°</span>
+          <span className="text-5xl">
+            {/* {metersToKilometers(temp ? temp : 0)}° */}
+            {parseInt(convertToCelcius(temprature ? temprature : 0))}°
+          </span>
           <p className="text-xs space-x-1 whitespace-nowrap">
             <span> Feels like</span>
-            <span>{metersToKilometers(feels_like ?? 0)}°</span>
+            <span>
+              {parseInt(convertToCelcius(feels_like ? feels_like : 0))}°
+            </span>
           </p>
           <p className="capitalize"> {description}</p>
         </div>
