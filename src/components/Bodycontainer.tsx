@@ -6,7 +6,7 @@ const Bodycontainer = (props: React.HTMLProps<HTMLDivElement>) => {
     <>
       <div
         {...props}
-        className="w-full bg-white border rounded-xl flex py-4 shadow-sm"
+        className="md:w-full bg-white border rounded-xl flex py-4 shadow-sm sm:w-4 gap-10 sm:gap-16 overflow-x-auto"
       ></div>
     </>
   );

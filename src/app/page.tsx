@@ -68,10 +68,6 @@ const Home = () => {
             <Dynamicbodycontainer className="gap-10 px-6 items-center">
               <div className="flex flex-col px-6">
                 {temprature ? (
-                  // <span className="text-5xl mb-10">
-                  //   {parseInt(convertToCelcius(temprature))}°
-                  // </span>
-
                   <div className="shadow-md mb-4">
                     <div className="w-full h-20 rounded px-5 mb-2">
                       <span className="text-5xl">
@@ -128,7 +124,6 @@ const Home = () => {
                 ))}
               </div>
             </Dynamicbodycontainer>
-
             <div className="flex gap-4">
               {/* LEFT */}
               <Dynamicbodycontainer className="w-fit justify-center flex-col px-4 items-center">
@@ -187,7 +182,7 @@ const Home = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p className="">Beta 1.3.5| &copy; 2024 Rahul Banik</p>
+        <p className="">Beta 1.3.7| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );
