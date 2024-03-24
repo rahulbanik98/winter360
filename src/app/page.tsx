@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import {
   Dynamicbodycontainer,
   Dynamicforecastweatherdetails,
@@ -8,7 +8,6 @@ import {
   DynamicweatherDetails,
   Dynamicweathericon,
 } from "@/components";
-import { getLiveData } from "@/utils/getData";
 import {
   convertToAMPM,
   convertToCelcius,
@@ -16,7 +15,7 @@ import {
   getDayOrNightIcon,
   metersToKilometers,
 } from "@/utils/Utilstempfunctions";
-import { placeAtom, pullData } from "./atom";
+import { pullData } from "./atom";
 import { useAtom } from "jotai";
 
 interface WeatherEntry {
@@ -24,46 +23,9 @@ interface WeatherEntry {
   // Add other properties as needed
 }
 
-interface WeatherDataState {
-  data: {
-    list: WeatherEntry[];
-
-    // Add other properties as needed
-  };
-  // Add other properties as needed
-}
-
-interface NavDataState {
-  data: {
-    list: WeatherEntry[];
-    // Add other properties as needed
-  };
-  // Add other properties as needed
-}
-
-interface Props {}
-
-const Home: FC<Props> = () => {
-  const [place] = useAtom(placeAtom);
-  const [weatherDataState, setWeatherDataState] = useState<
-    WeatherDataState | undefined | any
-  >();
+const Home = () => {
   const [navData] = useAtom<any>(pullData);
 
-  const fetchData = async () => {
-    try {
-      const liveWeatherData: WeatherDataState = await getLiveData(place);
-      setWeatherDataState(liveWeatherData);
-    } catch (error) {
-      console.log("API not working", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // const todayData: string | undefined | any = navData?.data?.list[0]?.dt_txt;
   const feelLikeTemp = navData?.data?.list[0]?.main?.feels_like;
   const temprature = navData?.data?.list[0]?.main?.temp;
   const maxTodayTemp = navData?.data?.list[0]?.main?.temp_max;
@@ -91,10 +53,6 @@ const Home: FC<Props> = () => {
       });
     }
   );
-
-  // console.log("todayData", todayData);
-  console.log("navData", navData);
-  console.log("firstDataForEachDate", firstDataForEachDate);
 
   return (
     <>
@@ -151,20 +109,6 @@ const Home: FC<Props> = () => {
                     </div>
                   </div>
                 )}
-                {/* <p className="text-xs space-x-1 whitespace-nowrap">
-                  <span>Feels like</span>
-                  <span>
-                    {parseInt(convertToCelcius(feelLikeTemp || "0"))}°
-                  </span>
-                </p> */}
-                {/* <div className="flex gap-4">
-                  <p className="text-xs space-x-2">
-                    {parseInt(convertToCelcius(maxTodayTemp || "0"))}°↑
-                  </p>
-                  <p className="text-xs space-x-2">
-                    {parseInt(convertToCelcius(minTodayTemp || "0"))}°↓
-                  </p>
-                </div> */}
               </div>
               <div className="flex gap-10 sm:gap-16 overflow-x-auto w-full justify-between pr-3">
                 {navData?.data?.list?.map((value: any, key: any) => (
@@ -243,7 +187,7 @@ const Home: FC<Props> = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p className="">Beta 1.3| &copy; 2024 Rahul Banik</p>
+        <p className="">Beta 1.3.5| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );
