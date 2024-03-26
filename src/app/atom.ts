@@ -1,4 +1,7 @@
 import { atom } from "jotai";
 
-export const pullData = atom<string | any>("");
-export const realtimeLocation = atom<object>({});
+const pullData = atom<string | any>("");
+const realtimeLocation = atom<object | any>({});
+const dataFlag = atom<boolean | any>(false);
+
+export { pullData, realtimeLocation, dataFlag };
