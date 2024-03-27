@@ -69,18 +69,22 @@ const Home = () => {
         {/* <Dynamicnavbar /> */}
         <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
           <section className="space-y-4">
-            <div className="space-y-2">
-              <h2 className="flex gap-1 text-2xl items-end">
-                <p>{navData?.data?.list[0]?.dt_txt}</p>
-              </h2>
-            </div>
+            {navData?.data?.list[0]?.dt_txt ? (
+              <div className="space-y-2">
+                <h2 className="flex gap-1 text-2xl items-end">
+                  <p>{navData?.data?.list[0]?.dt_txt}</p>
+                </h2>
+              </div>
+            ) : (
+              <div className="lg:w-[20%] md:w-[20%] sm:w-2/3 h-8 bg-gray-300 rounded" />
+            )}
             <Dynamicbodycontainer className="gap-10 px-6 items-center">
               <div className="flex flex-col px-6">
-                {navData?.data?.list[0]?.main?.temp ? (
-                  <div className="shadow-md mb-4">
-                    <div className="w-full h-20 rounded px-5 mb-2">
+                {temprature ? (
+                  <div className="mb-4">
+                    <div className="w-full h-20 rounded flex items-center content-center">
                       <span className="text-5xl">
-                        {parseInt(convertToCelcius(navData?.data?.list[0]?.main?.temp))}°
+                        {parseInt(convertToCelcius(temprature))}°
                       </span>
                     </div>
                     <div className="w-full h-4 rounded mb-2">
@@ -91,13 +95,13 @@ const Home = () => {
                         </span>
                       </p>
                     </div>
-                    <div className="flex gap-2">
-                      <div className="w-2/3 h-4 rounded mb-2">
+                    <div className="flex gap-6">
+                      <div className="h-4 rounded mb-2">
                         <p className="text-xs space-x-2">
                           {parseInt(convertToCelcius(maxTodayTemp || "0"))}°↑
                         </p>
                       </div>
-                      <div className="w-2/3 h-4 rounded mb-2">
+                      <div className="h-4 rounded mb-2">
                         <p className="text-xs space-x-2">
                           {parseInt(convertToCelcius(minTodayTemp || "0"))}°↓
                         </p>
@@ -105,7 +109,7 @@ const Home = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-white shadow-md animate-pulse mb-4">
+                  <div className="bg-white animate-pulse mb-4">
                     <div className="w-full h-20 bg-gray-300 rounded px-10 mb-2"></div>
                     <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
                     <div className="flex gap-2">
@@ -191,7 +195,7 @@ const Home = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p>Beta 1.5.3| &copy; 2024 Rahul Banik</p>
+        <p>Beta 1.5.1| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );
