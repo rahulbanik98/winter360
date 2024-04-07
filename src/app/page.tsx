@@ -5,7 +5,6 @@ import Head from "next/head";
 import {
   Dynamicbodycontainer,
   Dynamicforecastweatherdetails,
-  Dynamicnavbar,
   DynamicweatherDetails,
   Dynamicweathericon,
 } from "@/components";
@@ -33,6 +32,7 @@ const Home = () => {
   const maxTodayTemp = navData?.data?.list[0]?.main?.temp_max;
   const minTodayTemp = navData?.data?.list[0]?.main?.temp_min;
   const loveIcons = navData?.data?.list[0]?.weather[0]?.icon;
+  console.log("temprature", navData?.data?.list[0]?.main?.temp);
 
   const uniqueDates: string[] | unknown[] | any = [
     ...new Set(
@@ -55,6 +55,7 @@ const Home = () => {
       });
     }
   );
+  console.log(navData);
 
   return (
     <>
@@ -177,10 +178,10 @@ const Home = () => {
               <Dynamicforecastweatherdetails
                 key={key}
                 weatehrIcon={value?.weather[0]?.icon}
-                temprature={value?.main?.temp}
+                temprature={value?.main?.temp === undefined ? 304.53 : value?.main?.temp}
                 feels_like={value?.main?.feels_like}
                 date={value?.dt_txt}
-                visability={metersToKilometers(value?.visibility)}
+                visability={metersToKilometers(value?.visibility === "NaN" ? "10km" : value?.visibility)}
                 humidity={`${value?.main?.humidity}%`}
                 windSpeed={convertWindSpeed(value?.main?.speed ?? 1.64)}
                 airPressure={`${value?.main?.pressure}`}
@@ -195,7 +196,7 @@ const Home = () => {
       </div>
       <div className="bg-gray-300 items-center text-center">
         {/* pre-alpha, alpha, beta */}
-        <p>Beta 1.5.1| &copy; 2024 Rahul Banik</p>
+        <p>Beta 1.5.3| &copy; 2024 Rahul Banik</p>
       </div>
     </>
   );

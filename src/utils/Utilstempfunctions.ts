@@ -48,7 +48,6 @@ function convertToAMPM(timestamp: number): string {
 
 const timestamp: number = 1708216626;
 const formattedTime: string = convertToAMPM(timestamp);
-// console.log(formattedTime); // Output: 10:50:26 AM
 
 
 

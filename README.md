@@ -49,26 +49,13 @@ next => https://www.youtube.com/watch?v=nGoSP3MBV2E
 
 
 
-1. Chenge the navbar and theme.
-2. Work on search btn.
+
 3. Add live locations fumction
 4. work on light dark mode.
 pre-bita 1.7
-5. change the fav icon.
-6. change the direct date and time into week days.
-7. Add loader in each and every components.
-8. on the top of the cloud icon in first row change the format.
-bita 1.1
-9. Make gap between Main temparatur, flles like, top temparature and Low temparature.
-10. Fix the second row 2 divs 1st:- area live details 2nd:- make gape and verify data.
-11. check responsive.
-12. add datas in the bilow rows.
-bita 1.3
+
 13. Make api calls in server side component.
 14. restructure the codebase
 15. in search box using Api debouncing effect. 
-bita 1.5
-16.check all updats.
-virsion 2.1
 
 nextui :- https://nextui.org/docs/guide/introduction

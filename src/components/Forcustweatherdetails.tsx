@@ -30,6 +30,7 @@ export default function ForecastWeatherDetail(
     feels_like,
     description,
   } = props;
+
   return (
     <Dynamicbodycontainer className="gap-4">
       {/* left */}
@@ -44,7 +45,7 @@ export default function ForecastWeatherDetail(
         <div className="flex flex-col px-4">
           <span className="text-5xl">
             {/* {metersToKilometers(temp ? temp : 0)}° */}
-            {parseInt(convertToCelcius(temprature ? temprature : 0))}°
+            {parseInt(convertToCelcius(temprature))}°
           </span>
           <p className="text-xs space-x-1 whitespace-nowrap">
             <span> Feels like</span>

@@ -6,7 +6,7 @@ import { getLiveData } from "@/utils/getData";
 import axios from "axios";
 import { IoLocation } from "react-icons/io5";
 import { MdOutlineMyLocation } from "react-icons/md";
-
+import Alerts from "./Alerts";
 export default function Basicnav() {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const [place, setPlace] = useState("kolkata");
@@ -47,9 +47,6 @@ export default function Basicnav() {
     submitLiveLocation();
   }, []);
 
-  console.log("place::--", place);
-  console.log("liveLocation?.data?.name", liveLocation?.data?.name);
-
   return (
     <>
       {/*<!-- Component: Basic Navbar --> */}
@@ -84,10 +81,9 @@ export default function Basicnav() {
             {/*      <!-- Mobile trigger --> */}
             <button
               className={`relative order-10 block h-10 w-10 self-center lg:hidden
-                ${
-                  isToggleOpen
-                    ? "visible opacity-100 [&_span:nth-child(1)]:w-6 [&_span:nth-child(1)]:translate-y-0 [&_span:nth-child(1)]:rotate-45 [&_span:nth-child(3)]:w-0 [&_span:nth-child(2)]:-rotate-45 "
-                    : ""
+                ${isToggleOpen
+                  ? "visible opacity-100 [&_span:nth-child(1)]:w-6 [&_span:nth-child(1)]:translate-y-0 [&_span:nth-child(1)]:rotate-45 [&_span:nth-child(3)]:w-0 [&_span:nth-child(2)]:-rotate-45 "
+                  : ""
                 }
               `}
               onClick={() => setIsToggleOpen(!isToggleOpen)}
@@ -113,11 +109,10 @@ export default function Basicnav() {
             <ul
               role="menubar"
               aria-label="Select page"
-              className={`absolute top-0 left-0 z-[-1] h-[28.5rem] w-full justify-center overflow-hidden  overflow-y-auto overscroll-contain bg-white/90 px-8 pb-12 pt-24 font-medium transition-[opacity,visibility] duration-300 lg:visible lg:relative lg:top-0  lg:z-0 lg:flex lg:h-full lg:w-auto lg:items-stretch lg:overflow-visible lg:bg-white/0 lg:px-0 lg:py-0  lg:pt-0 lg:opacity-100 ${
-                isToggleOpen
-                  ? "visible opacity-100 backdrop-blur-sm"
-                  : "invisible opacity-0"
-              }`}
+              className={`absolute top-0 left-0 z-[-1] h-[28.5rem] w-full justify-center overflow-hidden  overflow-y-auto overscroll-contain bg-white/90 px-8 pb-12 pt-24 font-medium transition-[opacity,visibility] duration-300 lg:visible lg:relative lg:top-0  lg:z-0 lg:flex lg:h-full lg:w-auto lg:items-stretch lg:overflow-visible lg:bg-white/0 lg:px-0 lg:py-0  lg:pt-0 lg:opacity-100 ${isToggleOpen
+                ? "visible opacity-100 backdrop-blur-sm"
+                : "invisible opacity-0"
+                }`}
             >
               {/* <li role="none" className="flex items-stretch">
                 <a
@@ -197,6 +192,10 @@ export default function Basicnav() {
           </nav>
         </div>
       </header>
+
+      {/* {navData?.status === "200" ? <h1>Hello</h1>
+        : <h1>Hello1</h1>} */}
+
       {/*<!-- End Basic Navbar--> */}
     </>
   );
